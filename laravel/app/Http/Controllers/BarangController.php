@@ -73,24 +73,34 @@ class BarangController extends Controller
 
     public function getBarangByPengadaan($idpengadaan)
     {
+       
 
-    $barang = DB::table('view_detail_pengadaan')
-                ->where('idpengadaan', $idpengadaan)
-                ->join('view_barang', 'view_detail_pengadaan.idbarang', '=', 'view_barang.idbarang')
-                ->join('view_satuan', 'view_barang.idsatuan', '=', 'view_satuan.idsatuan')
-                ->select('view_barang.idbarang', 'view_barang.nama', 'view_satuan.nama_satuan')
-                ->get();
-
-    return response()->json($barang);
+        $query = DB::table('view_detail_pengadaan')
+            ->where('idpengadaan', $idpengadaan)
+            ->join('view_barang', 'view_detail_pengadaan.idbarang', '=', 'view_barang.idbarang')
+            ->join('view_satuan', 'view_barang.idsatuan', '=', 'view_satuan.idsatuan')
+            ->select('view_barang.idbarang', 'view_barang.nama', 'view_satuan.nama_satuan');
+    
+        $barang = $query->get();
+        Log::info('Hasil Barang: ' . json_encode($barang));
+    
+        return response()->json($barang);
     }
     public function getMaxJumlahByIdBarang($idbarang)
     {
-        // Mengambil total jumlah yang sudah ada berdasarkan idbarang
-        $jumlah = DB::table('detail_pengadaan')
-                    ->where('idbarang', $idbarang)
-                    ->sum('jumlah');  // Menjumlahkan nilai dari kolom jumlah
+        $stok = DB::table('kartu_stok')
+        ->where('idbarang', $idbarang)
+        ->orderBy('created_at', 'desc') // Mengambil data terbaru berdasarkan waktu
+        ->value('stok'); // Mengambil kolom stok
 
-        return response()->json(['max' => $jumlah]);
+            if ($stok === null) {
+        // Jika stok tidak ditemukan di kartu_stok, ambil dari detail_pengadaan
+            $stok = DB::table('detail_pengadaan')
+            ->where('idbarang', $idbarang)
+            ->sum('jumlah'); // Total jumlah barang di detail_pengadaan
+        }
+
+        return response()->json(['max' => $stok ?? 0]);
     }
     public function getBarangPenerimaan(){
         $barang = DB::table('detail_penerimaan')
@@ -101,10 +111,20 @@ class BarangController extends Controller
         return response()->json($barang);
     }
     public function getMaxJumlahBarangPenerimaan($idbarang){
-        $totalDiterima = DB::table('detail_penerimaan')
+        $stok = DB::table('kartu_stok')
         ->where('idbarang', $idbarang)
-        ->sum('jumlah');  
-        return response()->json(['max' => $totalDiterima]);
+        ->orderBy('created_at', 'desc') // Urutkan berdasarkan waktu terbaru
+        ->value('stok'); // Ambil kolom stok
+
+    // Jika stok tidak ditemukan di kartu_stok, fallback ke jumlah total di detail_pengadaan
+    if ($stok === null) {
+        $stok = DB::table('detail_pengadaan')
+            ->where('idbarang', $idbarang)
+            ->sum('jumlah'); // Total jumlah barang di detail_pengadaan
+    }
+
+    // Mengembalikan stok atau jumlah, jika tidak ada, kirimkan 0
+    return response()->json(['max' => $stok ?? 0]);
     }
     public function getBarangByPenerimaan($idpenerimaan){
     $barang = DB::table('detail_penerimaan')

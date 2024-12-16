@@ -325,6 +325,7 @@
 
     $('.select-id').change(function() { 
         var idpengadaan = $(this).val();
+        console.log(idpengadaan); 
         if (idpengadaan) {
             $.ajax({
                 url: '/get-barang-by-pengadaan/' + idpengadaan,

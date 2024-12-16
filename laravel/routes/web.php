@@ -51,8 +51,7 @@ Route::prefix('laporan')->group(function () {
 Route::get('/get-barang-by-pengadaan/{idpengadaan}', [BarangController::class, 'getBarangByPengadaan']);
 Route::get('/get-max-jumlah/{idbarang}', [BarangController::class, 'getMaxJumlahByIdBarang']);
 Route::get('/get-barang-penerimaan', [BarangController::class, 'getBarangPenerimaan']);
-Route::get('/get-max-jumlah/{idbarang}}', [BarangController::class, 'getMaxJumlahBarangPenerimaan']);
-Route::get('/get-max-jumlah/{idbarang}}', [BarangController::class, 'getMaxJumlahBarangPenerimaan']);
+Route::get('/get-max-jumlah/{idbarang}', [BarangController::class, 'getMaxJumlahByIdBarang']);
 
 Route::get('/get-barang-by-penerimaan/{idpenerimaan}', [BarangController::class, 'getBarangByPenerimaan']);
 Route::get('/get-barang-count', [BarangController::class, 'getBarangCount']);

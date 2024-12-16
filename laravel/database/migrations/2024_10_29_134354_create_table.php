@@ -64,7 +64,7 @@ return new class extends Migration
             status TINYINT NULL,
             harga INT,
             idsatuan INT,
-            FOREIGN KEY (idsatuan) REFERENCES satuan(idsatuan) ON DELETE SET NULL
+            FOREIGN KEY (idsatuan) REFERENCES satuan(idsatuan) ON DELETE CASCADE
         );
     ");
 
