@@ -358,7 +358,7 @@
                 type: 'GET',
                 success: function(response) {
                     jumlahInput.attr('max', response.max);
-                    jumlahInput.attr('placeholder', 'Jumlah barang yang ada pada pengadaan: ' + response.max);
+                    jumlahInput.attr('placeholder', 'Jumlah barang yang ada pada pengadaan : ' + response.max);
                 },
                 error: function() {
                     alert('Terjadi kesalahan saat mengambil data.');

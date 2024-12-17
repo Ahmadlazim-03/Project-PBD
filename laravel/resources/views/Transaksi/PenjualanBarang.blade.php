@@ -298,14 +298,14 @@
                                 </select>
                             </div>
 
-                            <div class="form-group col-md-6">
-                                <label for="jumlah">Jumlah Penjualan</label>
-                                <input type="number" class="form-control jumlah" name="jumlah[]" placeholder="Masukkan jumlah penerimaan">
-                                <div class="d-flex mt-3 justify-content-end">
-                                    <button type="button" class="btn btn-danger mr-2 remove-item"> - </button>
-                                    <button type="button" class="btn btn-info add-item"> + </button>
-                                </div>
+                        <div class="form-group col-md-6">
+                            <label for="jumlah">Jumlah Penjualan</label>
+                            <input type="number" class="form-control jumlah" name="jumlah[]">
+                            <div class="d-flex mt-3 justify-content-end">
+                                <button type="button" class="btn btn-danger mr-2 remove-item"> - </button>
+                                <button type="button" class="btn btn-info add-item"> + </button>
                             </div>
+                        </div>
                         </div>
                     </div>
 
@@ -364,14 +364,24 @@
             }
         });
 
-        $('#dynamicFields').on('change', '.idBarang', function () {
-            const selectedOption = $(this).find(':selected');
-            const maxValue = selectedOption.data('max') || 0;
-            const jumlahInput = $(this).closest('.dynamic-item').find('.jumlah');
+        $(document).on('change', '.idBarang', function() {
+        var idbarang = $(this).val();
+        var jumlahInput = $(this).closest('.dynamic-item').find('input[name="jumlah[]"]'); 
 
-            jumlahInput.attr('max', maxValue);
-            jumlahInput.attr('placeholder', `Jumlah barang maksimal: ${maxValue}`);
-        });
+        if (idbarang) {
+            $.ajax({
+                url: '/get-max-jumlah/' + idbarang, 
+                type: 'GET',
+                success: function(response) {
+                    jumlahInput.attr('max', response.max);
+                    jumlahInput.attr('placeholder', 'Jumlah barang yang ada pada kartu stok : ' + response.max);
+                },
+                error: function() {
+                    alert('Terjadi kesalahan saat mengambil data.');
+                }
+            });
+        }
+    });
     });
 </script>
 @endsection

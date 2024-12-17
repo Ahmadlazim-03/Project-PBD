@@ -55,3 +55,5 @@ Route::get('/get-max-jumlah/{idbarang}', [BarangController::class, 'getMaxJumlah
 
 Route::get('/get-barang-by-penerimaan/{idpenerimaan}', [BarangController::class, 'getBarangByPenerimaan']);
 Route::get('/get-barang-count', [BarangController::class, 'getBarangCount']);
+
+
