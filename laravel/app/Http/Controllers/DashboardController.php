@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Http;
 class DashboardController extends Controller
 {
     public function index(){
+        // Menggunakan database functions yang telah dibuat
         $totalBarang = DB::select('SELECT count_barang() AS total')[0]->total;
         $totalVendor = DB::select('SELECT count_vendor() AS total')[0]->total;
         $totalUser = DB::select('SELECT count_user() AS total')[0]->total;
